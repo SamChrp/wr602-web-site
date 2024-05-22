@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\GeneratePdfType;
+use App\Service\UrlToPdfMicroService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,9 +16,10 @@ class GeneratePdfController extends AbstractController
     #[Route('/generate/pdf', name: 'app_generate_pdf')]
     public function generatePdf
     (
-        Request             $request,
-        HttpClientInterface $client,
-        ParameterBagInterface $params
+        Request               $request,
+        HttpClientInterface   $client,
+        ParameterBagInterface $params,
+        UrlToPdfMicroService  $urlToPdfMicroService
     ): Response
     {
         $form = $this->createForm(GeneratePdfType::class);
@@ -26,15 +28,9 @@ class GeneratePdfController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $url = $form->get('url')->getData();
+            $urlToPdfMicroService->convertUrlToPdf($url);
 
-            $hostMicroService = $params->get('PDF_URL');
-
-            $response = $client->request('POST', $hostMicroService .'/url/converter', [
-                'body' => [
-                    'url' => $url
-                ],
-            ]);
-            return new Response($response->getContent(), 200, [
+            return new Response($urlToPdfMicroService->convertUrlToPdf($url), 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="file.pdf"',
             ]);
