@@ -26,6 +26,11 @@ class GeneratePdfController extends AbstractController
     {
         $user = $this->getUser();
 
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour générer un PDF.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $canGeneratePdf = $pdfService->canGeneratePdfToday($user);
         $form = $this->createForm(GeneratePdfType::class);
 
