@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Abonnements{% endblock %}
+
+{% block body %}
+    <h1>Abonnements</h1>
+    <div class="row">
+        {% for subscription in subscriptions %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header d-flex justify-content-between">
+                        <h4 class="my-0 font-weight-normal">{{ subscription.title }}</h4>
+                        {% if app.user and app.user.subscription.id == subscription.id %}
+                            <span class="badge bg-success d-flex align-items-center">Abonné</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                {{ subscription.description }}
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <span class="fw-bold"> Options : </span>{{ subscription.getOptions }}
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <span class="fw-bold">Tarif : </span>{{ subscription.getReadablePrice }}
+                            </div>
+                        </div>
+                        <div class="row mt-5 mb-3">
+                            <div class="col-md-12 d-flex justify-content-center">
+                                {% if app.user and app.user.subscription.id == subscription.id %}
+                                    <i class="bi bi-check text-success"></i> Abonné
+                                {% else %}
+                                    <a class="btn btn-primary" href="{{ path('app_subsciption_user', {'subscription' : subscription.id }) }}">
+                                        Souscrire à cette offre
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -135,4 +135,24 @@ class Subscription
 
         return $this;
     }
+
+    public function getOptions(): string
+    {
+        if ($this->title === 'Basique') {
+            return '2 PDFs par jours';
+        } elseif ($this->title === 'Premium') {
+            return '10 PDFs par jours';
+        } else {
+            return 'Nombre illimité de PDFs par jours';
+        }
+    }
+
+    public function getReadablePrice(): string
+    {
+        if ($this->title === 'Basique') {
+            return 'Gratuit';
+        } else {
+            return $this->price . '€ / mois';
+        }
+    }
 }

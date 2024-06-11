@@ -6,32 +6,68 @@
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
+    <div class="container d-flex justify-content-center">
+        <div class="w-50">
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center">
+                    <p>Vous avez déjà un compte ?</p>
+                </div>
+            </div>
 
-    <p>Vous avez déjà un compte ?</p>
-    <a href="{{ path('app_login') }}" class="btn btn-primary" type="button">
-        Connexion
-    </a>
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center">
+                    <a href="{{ path('app_login') }}" class="btn btn-primary" type="button">
+                        Connexion
+                    </a>
+                </div>
+            </div>
 
-    <hr>
+            <hr>
 
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInscription" aria-expanded="false" aria-controls="collapseConnection">
-        S'inscrire
-    </button>
-    <div class="collapse" id="collapseInscription">
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center">
+                    <h2>Inscription</h2>
+                </div>
+            </div>
 
-        <h2>Inscription</h2>
+            {{ form_start(registrationForm) }}
+            {{ form_errors(registrationForm) }}
 
-        {{ form_errors(registrationForm) }}
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_row(registrationForm.email) }}
+                </div>
+            </div>
 
-        {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.firstName) }}
-        {{ form_row(registrationForm.lastName) }}
-        {{ form_row(registrationForm.plainPassword, {
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_row(registrationForm.firstName) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(registrationForm.lastName) }}
+                </div>
+            </div>
 
-        <button type="submit" class="btn btn-primary">Register</button>
-        {{ form_end(registrationForm) }}
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_row(registrationForm.plainPassword) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_row(registrationForm.agreeTerms, {
+                        label: 'Accepter les conditions générales d\'utilisation'
+                    }) }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">Valider l'inscription</button>
+                </div>
+            </div>
+                {{ form_end(registrationForm) }}
+        </div>
     </div>
 {% endblock %}
