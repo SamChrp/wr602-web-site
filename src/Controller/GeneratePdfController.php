@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Pdf;
 use App\Form\GeneratePdfType;
+use App\Repository\PdfRepository;
+use App\Service\PdfService;
 use App\Service\UrlToPdfMicroService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GeneratePdfController extends AbstractController
 {
@@ -17,27 +19,48 @@ class GeneratePdfController extends AbstractController
     public function generatePdf
     (
         Request               $request,
-        HttpClientInterface   $client,
-        ParameterBagInterface $params,
-        UrlToPdfMicroService  $urlToPdfMicroService
+        UrlToPdfMicroService  $urlToPdfMicroService,
+        EntityManagerInterface $entityManager,
+        PdfService            $pdfService
     ): Response
     {
+        $user = $this->getUser();
+
+        $canGeneratePdf = $pdfService->canGeneratePdfToday($user);
         $form = $this->createForm(GeneratePdfType::class);
 
-        $form->handleRequest($request);
+        if ($canGeneratePdf === true) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $url = $form->get('url')->getData();
-            $urlToPdfMicroService->convertUrlToPdf($url);
+            $form->handleRequest($request);
 
-            return new Response($urlToPdfMicroService->convertUrlToPdf($url), 200, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="file.pdf"',
-            ]);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $pdf = new Pdf();
+                $url = $form->get('url')->getData();
+                $content = $urlToPdfMicroService->convertUrlToPdf($url);
+
+                $fileName = 'pdf_' . uniqid() . '.pdf';
+                $filePath =   'pdf/' . $fileName;
+                file_put_contents($filePath, $content);
+
+                $pdf->setTitle($fileName);
+                $pdf->setOwner($user);
+                $pdf->setCreatedAt(new \DateTimeImmutable());
+
+                $entityManager->persist($pdf);
+                $entityManager->flush();
+
+                return new Response($urlToPdfMicroService->convertUrlToPdf($url), 200, [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="file.pdf"',
+                ]);
+            }
         }
+
+        $this->redirectToRoute('app_generate_pdf');
 
         return $this->render('generate_pdf/index.html.twig', [
             'form' => $form->createView(),
+            'canGeneratePdf' => $canGeneratePdf,
         ]);
     }
 }

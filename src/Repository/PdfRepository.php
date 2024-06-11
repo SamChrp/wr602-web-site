@@ -45,4 +45,15 @@ class PdfRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findTodaysPdf($todayDate, $tomorrowDate): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.createdAt BETWEEN :todayDate and :tomorrowDate')
+            ->setParameter('todayDate', $todayDate)
+            ->setParameter('tomorrowDate', $tomorrowDate)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
