@@ -3,15 +3,19 @@
 {% block title %}Hello GeneratePdfController!{% endblock %}
 
 {% block body %}
+    {% if app.user %}
+        <div class="example-wrapper">
+            {{ form_start(form, {
+                'attr': {
+                    'target': '_blank',
+                }
+            }) }}
 
-<div class="example-wrapper">
-    {{ form_start(form, {
-        'attr': {
-            'target': '_blank',
-        }
-    }) }}
-
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
-</div>
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </div>
+    {% else %}
+        <p>Vous devez souscrir à un abonnement pour pouvoir générer un pdf !</p>
+        <a href="{{ path('app_register') }}" class="btn btn-primary">Inscription</a>
+    {% endif %}
 {% endblock %}

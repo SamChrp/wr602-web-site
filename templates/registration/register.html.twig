@@ -7,11 +7,23 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <p>Vous avez déjà un compte ?</p>
+    <a href="{{ path('app_login') }}" class="btn btn-primary" type="button">
+        Connexion
+    </a>
 
-    {{ form_errors(registrationForm) }}
+    <hr>
 
-    {{ form_start(registrationForm) }}
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInscription" aria-expanded="false" aria-controls="collapseConnection">
+        S'inscrire
+    </button>
+    <div class="collapse" id="collapseInscription">
+
+        <h2>Inscription</h2>
+
+        {{ form_errors(registrationForm) }}
+
+        {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.firstName) }}
         {{ form_row(registrationForm.lastName) }}
@@ -20,5 +32,6 @@
         {{ form_row(registrationForm.agreeTerms) }}
 
         <button type="submit" class="btn btn-primary">Register</button>
-    {{ form_end(registrationForm) }}
+        {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}
