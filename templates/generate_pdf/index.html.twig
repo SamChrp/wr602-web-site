@@ -4,16 +4,21 @@
 
 {% block body %}
     {% if app.user %}
-        <div class="example-wrapper">
-            {{ form_start(form, {
-                'attr': {
-                    'target': '_blank',
-                }
-            }) }}
+        {% if canGeneratePdf == true %}
+            <div class="example-wrapper">
+                {{ form_start(form, {
+                    'attr': {
+                        'target': '_blank',
+                    }
+                }) }}
 
-            {{ form_rest(form) }}
-            {{ form_end(form) }}
-        </div>
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </div>
+        {% else %}
+            <p>Vous avez atteint votre limite de PDF pour aujourd\'hui. Revenez demain ou mettez à jour votre <a
+                        href="{{ path('app_subsciption') }}">abonnement</a>.</p>
+        {% endif %}
     {% else %}
         <p>Vous devez souscrir à un abonnement pour pouvoir générer un pdf !</p>
         <a href="{{ path('app_register') }}" class="btn btn-primary">Inscription</a>
