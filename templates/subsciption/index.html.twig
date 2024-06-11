@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Abonnements{% endblock %}
+
+{% block body %}
+    <h1>Abonnements</h1>
+    <div class="row">
+        {% for subscription in subscriptions %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{ subscription.title }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                {{ subscription.description }}
+                            </div>
+                        </div>
+                        <div class="row mt-5 mb-3">
+                            <div class="col-md-12 d-flex justify-content-center">
+                                <button class="btn btn-primary">
+                                    Souscrire à cette offre
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+{% endblock %}
