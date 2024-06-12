@@ -54,14 +54,15 @@ class GeneratePdfController extends AbstractController
                 $entityManager->persist($pdf);
                 $entityManager->flush();
 
-                return new Response($urlToPdfMicroService->convertUrlToPdf($url), 200, [
+                $this->addFlash('success', 'Le PDF a été généré avec succès. Vous pouveez maintenant le retrouver dans la rebruique "Historique".');
+
+                 return new Response($urlToPdfMicroService->convertUrlToPdf($url), 200, [
                     'Content-Type' => 'application/pdf',
                     'Content-Disposition' => 'inline; filename="file.pdf"',
                 ]);
             }
         }
 
-        $this->redirectToRoute('app_generate_pdf');
 
         return $this->render('generate_pdf/index.html.twig', [
             'form' => $form->createView(),
