@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PdfController!{% endblock %}
+
+{% block body %}
+    <div class="row">
+        {% if app.user %}
+            {% for pdf in pdfs %}
+                <div class="col-md-6 g-5 d-flex justify-content-center">
+                    <div class="card p-2 w-75">
+                        <div class="mb-3">
+                            <embed src="{{ asset('pdf/') }}{{ pdf.title }}" type="application/pdf" class="w-100" style="height: 25rem">
+                        </div>
+                        <div class="card-body">
+                            <div class="row d-flex justify-content-between">
+                                <div class="col-md-6">
+                                    <a href="{{ asset('pdf/') }}{{ pdf.title }}" download="{{ pdf.title }}" class="btn btn-secondary">Télécharger</a>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <button class="btn btn-primary" onclick="window.open('{{ asset('pdf/') }}{{ pdf.title }}')">Afficher dans un nouvel onglet</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1>Connectez-vous pour voir l'historique de vos pdfs</h1>
+        {% endif %}
+    </div>
+{% endblock %}
